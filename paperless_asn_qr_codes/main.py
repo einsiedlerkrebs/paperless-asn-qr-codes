@@ -13,7 +13,7 @@ def render(c, x, y):
     global digits
     global simpleASN
     global tags
-    global tag_separator
+    global tag_prefix
     global line_length
     global max_lines
     max_chars_total = 0
@@ -29,7 +29,7 @@ def render(c, x, y):
         print(f"{human_asn_value} exceeds line width ({line_length} characters), tried -S option (simple-ASN)?")
 
     if tags:
-        qr = QRCodeImage(f"ASN{startASN:0{digits}d}{tag_separator}{tag_separator.join(tags.split(','))}", size=y * 0.9)
+        qr = QRCodeImage(f"ASN{startASN:0{digits}d},{tag_prefix}{f",{tag_prefix}".join(tags.split(','))}", size=y * 0.9)
     else:
         qr = QRCodeImage(f"ASN{startASN:0{digits}d}", size=y * 0.9)
     qr.drawOn(c, 0 * mm, y * 0.05)
@@ -146,10 +146,10 @@ def main():
         help="Comma separatored list of tags",
     )
     parser.add_argument(
-        "--tag-separator",
+        "--tag-prefix",
         "-T",
         type=str,
-        default='T:',
+        default='TAG:',
         help="Serperator prefix for TAG_BARCODE_MAPPING",
     )
     parser.add_argument(
@@ -177,12 +177,12 @@ def main():
     global digits
     global simpleASN
     global tags
-    global tag_separator
+    global tag_prefix
     global line_length
     global max_lines
     max_lines = 3
     tags = args.tags
-    tag_separator = args.tag_separator
+    tag_prefix = args.tag_prefix
     startASN = int(args.start_asn)
     digits = int(args.digits)
     simpleASN = args.simple_ASN
